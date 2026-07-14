@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  .history-wrap {
+    padding: 20px 0;
+  }
+
+  .history-wrap h2, .history-wrap h3, .history-wrap h4 {
+    text-align: center;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  th, td {
+    padding: 12px 18px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+
+  th {
+    background-color: #f8f8f8;
+  }
+
+  .qr, .timeline {
+    margin-top: 30px;
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  .timeline ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+
+  .timeline li {
+    margin: 10px 0;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-top: 25px;
+    text-decoration: none;
+    color: #555;
+    font-size: 14px;
+  }
+</style>
+
+<div class="history-wrap">
+  <h2>Track Product</h2>
+
+  {% if pid %}
+    <h3>Product ID: {{ pid }}</h3>
+
+    {% if history %}
+      <table>
+        <thead>
+          <tr>
+            <th>Block</th>
+            <th>Updated By</th>
+            <th>Status</th>
+            <th>Description</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for block in history %}
+            <tr>
+              <td>{{ block.index }}</td>
+              <td>{{ block.data.by | title }}</td>
+              <td>{{ block.data.status }}</td>
+              <td>{{ block.data.description }}</td>
+              <td>{{ block.timestamp | datetimeformat }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      {% if qr %}
+        <div class="qr">
+          <h4>Scan QR Code:</h4>
+          <img src="data:image/png;base64,{{ qr }}" alt="QR Code for {{ pid }}">
+        </div>
+      {% endif %}
+
+      <div class="timeline">
+        <h3>Flow Timeline</h3>
+        <ul>
+          {% for block in history %}
+            <li><strong>{{ block.data.by | title }}</strong> &mdash; {{ block.data.status }}: {{ block.data.description }} ({{ block.timestamp | datetimeformat }})</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% else %}
+      <p class="notice text-center">No history found for this Product ID.</p>
+    {% endif %}
+  {% endif %}
+
+  <div class="text-center">
+    <a class="back-link" href="{{ url_for('dashboard') }}">&larr; Back to Dashboard</a>
+  </div>
+</div>
+{% endblock %}

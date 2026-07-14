@@ -1,0 +1,21 @@
+.timeline {
+    list-style: none;
+    padding: 0;
+}
+.timeline li {
+    margin-bottom: 20px;
+    border-left: 3px solid #153a61;
+    padding-left: 10px;
+    animation: fadeIn 0.5s ease-in;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease-out;
+}
+.timeline li.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}

@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  .ph-wrap { padding: 10px 0; }
+  .ph-wrap h2 { margin-bottom: 4px; }
+  .ph-wrap p.sub { color: #666; margin-bottom: 25px; }
+
+  .icon-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 25px; }
+  .icon-tab {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    padding: 16px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    text-decoration: none;
+    color: #333;
+    min-width: 190px;
+    border: 2px solid transparent;
+    transition: transform 0.15s;
+  }
+  .icon-tab:hover { transform: translateY(-2px); }
+  .icon-tab.active { border-color: #7f00ff; background: #f7f0ff; }
+  .icon-tab .emoji { font-size: 26px; }
+  .icon-tab .label { font-weight: 600; font-size: 14px; }
+  .icon-tab .count { font-size: 20px; font-weight: bold; color: #7f00ff; }
+
+  .deep-dive {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(to right, #7f00ff, #a64bf4);
+    color: white;
+    padding: 14px 22px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 25px;
+  }
+  .deep-dive .emoji { font-size: 22px; }
+
+  table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+  th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #eee; font-size: 14px; }
+  th { background-color: #f8f8f8; }
+  .stage-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: 600; }
+  .stage-yes { background: #d4f4e0; color: #146c3a; }
+  .stage-no { background: #f4d4d4; color: #7a1f1f; }
+  .empty-note { color: #888; padding: 15px 0; }
+  a.view-link { color: #7f00ff; text-decoration: none; font-size: 13px; font-weight: 600; }
+  a.view-link:hover { text-decoration: underline; }
+  .back-link { display: inline-block; margin-top: 20px; text-decoration: none; color: #555; }
+</style>
+
+<div class="ph-wrap">
+  <h2>Product History</h2>
+  <p class="sub">Browse products by stage, or jump into the full trail of a single product.</p>
+
+  <div class="icon-row">
+    <a class="icon-tab {% if stage == 'completed' %}active{% endif %}" href="/product_history?stage=completed">
+      <span class="emoji">✅</span>
+      <div><div class="label">Completed</div><div class="count">{{ counts.completed }}</div></div>
+    </a>
+    <a class="icon-tab {% if stage == 'manufacturer' %}active{% endif %}" href="/product_history?stage=manufacturer">
+      <span class="emoji">🏭</span>
+      <div><div class="label">Manufacturer</div><div class="count">{{ counts.manufacturer }}</div></div>
+    </a>
+    <a class="icon-tab {% if stage == 'distributor' %}active{% endif %}" href="/product_history?stage=distributor">
+      <span class="emoji">🚚</span>
+      <div><div class="label">Distributor</div><div class="count">{{ counts.distributor }}</div></div>
+    </a>
+    <a class="icon-tab {% if stage == 'retailer' %}active{% endif %}" href="/product_history?stage=retailer">
+      <span class="emoji">🏬</span>
+      <div><div class="label">Retailer</div><div class="count">{{ counts.retailer }}</div></div>
+    </a>
+  </div>
+
+  <a class="deep-dive" href="/track">
+    <span class="emoji">🔍</span>
+    Deep Dive — Search a Product's Full Trail
+  </a>
+
+  <h3>{{ heading }}</h3>
+  {% if rows %}
+    <table>
+      <tr>
+        <th>Product ID</th>
+        <th>Description</th>
+        <th>Manufacturer</th>
+        <th>Distributor</th>
+        <th>Retailer</th>
+        <th>Current Status</th>
+        <th>Last Updated</th>
+        <th></th>
+      </tr>
+      {% for p in rows %}
+        <tr>
+          <td>{{ p.product_id }}</td>
+          <td>{{ p.description }}</td>
+          <td><span class="stage-badge {% if p.manufactured %}stage-yes{% else %}stage-no{% endif %}">{{ '✓' if p.manufactured else '✗' }}</span></td>
+          <td><span class="stage-badge {% if p.distributed %}stage-yes{% else %}stage-no{% endif %}">{{ '✓' if p.distributed else '✗' }}</span></td>
+          <td><span class="stage-badge {% if p.retailed %}stage-yes{% else %}stage-no{% endif %}">{{ '✓' if p.retailed else '✗' }}</span></td>
+          <td>{{ p.status }}</td>
+          <td>{{ p.updated_at | datetimeformat }}</td>
+          <td><a class="view-link" href="/track?product_id={{ p.product_id }}">🔍 View</a></td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p class="empty-note">No products in this view yet.</p>
+  {% endif %}
+
+  <a class="back-link" href="{{ url_for('dashboard') }}">&larr; Back to Dashboard</a>
+</div>
+{% endblock %}

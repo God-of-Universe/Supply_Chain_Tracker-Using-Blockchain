@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  .track-container {
+    max-width: 800px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 40px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    text-align: center;
+    border-radius: 8px;
+  }
+
+  .track-container h3 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  .track-container form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .track-container input[type="text"] {
+    width: 300px;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+
+  .track-container button {
+    background-color: #000;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .track-container button:hover {
+    background-color: #444;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-top: 25px;
+    text-decoration: none;
+    color: #555;
+    font-size: 14px;
+  }
+</style>
+
+<div class="track-container">
+  <h3>Track Your Product</h3>
+
+  <form method="post">
+    <input type="text" name="product_id" placeholder="Enter Product ID" required>
+    <button type="submit">Track</button>
+  </form>
+
+  <a class="back-link" href="{{ url_for('dashboard') }}">&larr; Back to Dashboard</a>
+</div>
+{% endblock %}

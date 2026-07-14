@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  .form-container {
+    max-width: 600px;
+    margin: 20px auto;
+    background: white;
+    padding: 30px 40px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  }
+  .form-container h2 { margin-bottom: 6px; }
+  .form-container p.hint { color: #666; margin-bottom: 25px; }
+  .form-container label { display: block; margin: 10px 0 6px; font-weight: 500; }
+  .form-container input[type="text"], .form-container select, .form-container textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+    box-sizing: border-box;
+  }
+  .form-container textarea { resize: vertical; font-family: monospace; }
+  .form-container button {
+    margin-top: 20px;
+    background-color: #7f00ff;
+    color: white;
+    padding: 10px 18px;
+    font-size: 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .form-container button:hover { background-color: #6200cc; }
+  .back-link { display: inline-block; margin-top: 25px; text-decoration: none; color: #555; font-size: 14px; }
+</style>
+
+<div class="form-container">
+  <h2>🚚 Distribute Product</h2>
+  <p class="hint">Update the shipping/logistics status of a product that has already been produced. Marking a product "In Transit" sends it to the Retailer's queue.</p>
+
+  <form method="POST">
+    <label>Product ID:</label>
+    <input type="text" name="product_id" placeholder="e.g. P12345" required>
+
+    <label>Status:</label>
+    <select name="status">
+      <option {% if preselect_status == 'Packed' %}selected{% endif %}>Packed</option>
+      <option {% if preselect_status == 'Shipped' %}selected{% endif %}>Shipped</option>
+      <option {% if preselect_status == 'In Transit' %}selected{% endif %}>In Transit</option>
+    </select>
+
+    <label>Notes (optional):</label>
+    <textarea name="description" rows="4" placeholder="Any shipping/logistics notes..."></textarea>
+
+    <button type="submit">Update Distribution Status</button>
+  </form>
+
+  <a class="back-link" href="{{ url_for('dashboard') }}">&larr; Back to Dashboard</a>
+</div>
+{% endblock %}
